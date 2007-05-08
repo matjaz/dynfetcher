@@ -1,0 +1,46 @@
+<?php
+
+require 'DynFetcher.class.php';
+
+$URL = 'http://24ur.com/spored/poptv_' . mktime(0, 0, 0, date('m'), date('d'), date('Y')) . '.php'; 
+
+// XPath expression of items
+$itemXPath = '/html/body/table[2]/tr/td/table/tr/td[2]/table/tr/td/div/div';
+
+// Associative array, where key is name of data and value is associative array with the following keys:
+// -xpath (required): XPath expression of data, relative from item
+// -required: true or false
+// -process:  PHP code, for additional processing of data
+//            data is passed as $data variable by reference
+//            if code returns false data is skipped
+$itemData = array(
+    'hour'   => array('xpath' => 'span',                 'required' => true),
+    'title'  => array('xpath' => 'span[2]/span/a',       'process'  => '$data = trim($data);'),
+    'title1' => array('xpath' => 'span[2]/span',         'process'  => '$data = trim($data);'),
+    'link'   => array('xpath' => 'span[2]/span/a/@href', 'process'  => '$data = "http://24ur.com" . $data;'),
+    'desc'   => array('xpath' => 'span[2]',              'process'  => '$data = trim($data);'),
+);
+
+// PHP code, for additionl processing of item after all items have been processed
+// item is passes as $item variable by reference
+// if code returns false item is skipped
+$itemProcessFunction = '
+    if (!isset($item["title"])) {
+        $item["title"] = $item["title1"];
+    }
+    unset($item["title1"]);
+    if (empty($item["desc"])) {
+        unset($item["desc"]);
+    }
+
+    // return false; // skip item
+';
+
+
+header('Content-type: text/plain');
+
+$dyn = new DynFetcher($URL);
+
+var_dump($dyn->find($itemXPath, $itemData, $itemProcessFunction));
+
+?>
