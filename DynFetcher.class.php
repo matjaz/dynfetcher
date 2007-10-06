@@ -100,11 +100,7 @@ class DynFetcher
                     }
                 }
             }
-            if ($processItem) {
-                if ($itemProcessFunction($item) !== false) {
-                    $items[] = $item;
-                }
-            } else {
+            if (!$processItem || $itemProcessFunction($item) !== false) {
                 $items[] = $item;
             }
         }
