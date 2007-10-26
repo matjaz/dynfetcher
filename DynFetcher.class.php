@@ -11,7 +11,7 @@ class DynFetcher
 {
 
     protected $url;
-    protected $rawData = null;
+    private $simpleXML = null;
 
     /**
      *
@@ -23,19 +23,20 @@ class DynFetcher
     }
 
     /**
-     *
-     * @return string Data fetched from URL
+     * Fetches a website content.
+     * It is called automatticaly inside of {@link #find} method.
+     * @return SimpleXMLElement SimpleXML object representation of webpage.
      */
     function fetch()
     {
-        if (is_null($this->rawData)) {
-            $res = @file_get_contents($this->url);
-            if (!is_string($res)) {
+        if (is_null($this->simpleXML)) {
+            $data = @file_get_contents($this->url);
+            if (!is_string($data)) {
                 throw new Exception('Error retrieving data');
             }
-            $this->rawData = $res;
+            $this->simpleXML = simplexml_import_dom(@DomDocument::loadHTML($data));
         }
-        return $this->rawData;
+        return $this->simpleXML;
     }
 
     /**
@@ -50,10 +51,7 @@ class DynFetcher
         if (!is_array($itemData)) {
             throw new Exception('$itemData must be array!');
         }
-        $this->fetch();
-        $simpleXML = simplexml_import_dom(@DomDocument::loadHTML($this->rawData));
-        $results = $simpleXML->xpath($itemXPath);
-        unset($simpleXML);
+        $results = $this->fetch()->xpath($itemXPath);
 
         if (!is_array($results)) {
             throw new Exception('XPath did not return any results');
