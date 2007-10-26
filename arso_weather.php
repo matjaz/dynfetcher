@@ -26,7 +26,7 @@ foreach($dyn->find('/html/body/table[2]/tr/td[2]/div[2]/table/tr[3]/td[not(@clas
 $i = 0;
 foreach($dyn->find('/html/body/table[2]/tr/td[2]/div[2]/table/tr[2]/td[not(@class) or @class="pojav"]', array(
     'typeIMG'  => array('xpath' => 'img/@src',      'process'  => '$data = "http://www.arso.gov.si" . $data;'),
-    'typeText' => array('xpath' => 'img/@alt'),
+    'typeText' => array('xpath' => 'img/@alt',      'process'  => '$data = str_replace("er:", "er", str_replace("pojav: ", "", $data));'),
     'weatherIMG'  => array('xpath' => 'a/img/@src', 'process'  => '$data = "http://www.arso.gov.si" . $data;'),
     'weatherText' => array('xpath' => 'a/img/@alt')
 )) as $data) {
@@ -36,6 +36,10 @@ foreach($dyn->find('/html/body/table[2]/tr/td[2]/div[2]/table/tr[2]/td[not(@clas
 	}
 }
 
-var_dump($weather);
+if (isset($_GET['format']) && $_GET['format'] === 'json') {
+    echo json_encode($weather);
+} else {
+    var_dump($weather);
+}
 
 ?>
