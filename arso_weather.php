@@ -6,13 +6,15 @@ $URL = 'http://www.arso.gov.si/';
 
 header('Content-type: text/plain');
 
+$baseXPath = '/html/body/table[2]/tr/td[2]/div[3]/table';
+
 $dyn = new DynFetcher($URL);
 
-$weather = $dyn->find('/html/body/table[2]/tr/td[2]/div[2]/table/tr/th[@colspan="2"]', array(
+$weather = $dyn->find($baseXPath . '/tr/th[@colspan="2"]', array(
     'day' => array('xpath' => '.', 'required' => true)
 ));
 
-foreach($dyn->find('/html/body/table[2]/tr/td[2]/div[2]/table/tr[3]/td[not(@class)]',
+foreach($dyn->find($baseXPath . '/tr[3]/td[@colspan="2"]',
 					array('tempText' => array('xpath' => '.', 'required' => true)),
 '
     $tempText    = explode(" / ", $item["tempText"]);
@@ -24,16 +26,16 @@ foreach($dyn->find('/html/body/table[2]/tr/td[2]/div[2]/table/tr[3]/td[not(@clas
 }
 
 $i = 0;
-foreach($dyn->find('/html/body/table[2]/tr/td[2]/div[2]/table/tr[2]/td[not(@class) or @class="pojav"]', array(
+foreach($dyn->find($baseXPath . '/tr[2]/td[not(@class="prazen")]', array(
     'typeIMG'  => array('xpath' => 'img/@src',      'process'  => '$data = "http://www.arso.gov.si" . $data;'),
     'typeText' => array('xpath' => 'img/@alt',      'process'  => '$data = str_replace("er:", "er", str_replace("pojav: ", "", $data));'),
     'weatherIMG'  => array('xpath' => 'a/img/@src', 'process'  => '$data = "http://www.arso.gov.si" . $data;'),
     'weatherText' => array('xpath' => 'a/img/@alt')
 )) as $data) {
     $weather[$i] = array_merge($weather[$i], $data);
-	if (isset($data['weatherIMG'])) {
-		$i++;
-	}
+    if (isset($data['weatherIMG'])) {
+        $i++;
+    }
 }
 
 if (isset($_GET['format']) && $_GET['format'] === 'json') {
