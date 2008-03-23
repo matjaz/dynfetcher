@@ -6,7 +6,7 @@ $URL = 'http://www.arso.gov.si/';
 
 header('Content-type: text/plain');
 
-$baseXPath = '/html/body/table[2]/tr/td[2]/div[3]/table';
+$baseXPath = '/html/body/table[2]/tr/td[2]/div[2]/table';
 
 $dyn = new DynFetcher($URL);
 
