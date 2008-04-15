@@ -2,10 +2,10 @@
 
 require 'DynFetcher.class.php';
 
-$URL = 'http://24ur.com/spored/poptv_' . mktime(0, 0, 0, date('m'), date('d'), date('Y')) . '.php'; 
+$URL = 'http://www2.24ur.com/spored/poptv_' . mktime(0, 0, 0, date('m'), date('d'), date('Y')) . '.php'; 
 
 // XPath expression of items
-$itemXPath = '/html/body/table[2]/tr/td/table/tr/td[2]/table/tr/td/div/div[@class!="tv_legenda"]';
+$itemXPath = '//div[@id="tvspored"]/div[@class!="tv_legenda"]';
 
 // Associative array, where key is name of data and value is associative array with the following keys:
 // -xpath (required): XPath expression of data, relative from item
