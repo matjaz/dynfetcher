@@ -5,30 +5,40 @@ require 'DynFetcher.class.php';
 $itemXPath = '/html/body/table/tr[3]/td/center/table/tr[2]/td/div/table/tr/td[2]/div/div[div/span/img[@alt="Loto"]]';
 
 $dyn = new DynFetcher('http://www.loterija.si/');
-$data = array('round'     => '',
+$data = array('round'     => 0,
               'date'      => '',
               'numbers'   => array(),
-              'aditional' => '',
+              'additional' => 0,
+              'plus_numbers'   => array(),
+              'plus_additional' => 0,
               'lotko'     => '');
 
 foreach ($dyn->find($itemXPath . '/div[@class="game-header"]', array('round' => array('xpath' => 'span', 'required' => true))) as $num) {
     preg_match('/.* (\d*)\..* - (.*)$/', $num['round'], $parts);
-    $data['round'] = $parts[1];
+    $data['round'] = (int)$parts[1];
     $data['date']  = $parts[2];
 }
 
-foreach ($dyn->find($itemXPath . '/div[2]/table/tr/td[@class="loto-table"]', array('num' => array('xpath' => 'div', 'required' => true))) as $num) {
-    $data['numbers'][] = $num['num'];
+
+foreach ($dyn->find($itemXPath . '/div[2]/table[1]/tr/td[@class="loto-table"]', array('num' => array('xpath' => 'div', 'required' => true))) as $num) {
+    $data['numbers'][] = (int)$num['num'];
+}
+
+foreach ($dyn->find($itemXPath . '/div[2]/table[1]/tr/td[@class="loto-table-dodatna"]', array('additional' => array('xpath' => 'div', 'required' => true))) as $num) {
+     $data['additional'] = (int)$num['additional'];
 }
 
 
-foreach ($dyn->find($itemXPath . '/div[2]/table/tr/td[@class="loto-table-dodatna"]', array('aditional' => array('xpath' => 'div', 'required' => true))) as $num) {
-     $data['aditional'] = $num['aditional'];
+foreach ($dyn->find($itemXPath . '/div[2]/table[3]/tr/td[@class="loto-table"]', array('num' => array('xpath' => 'div', 'required' => true))) as $num) {
+    $data['plus_numbers'][] = (int)$num['num'];
 }
 
+foreach ($dyn->find($itemXPath . '/div[2]/table[3]/tr/td[@class="loto-table-dodatna"]', array('additional' => array('xpath' => 'div', 'required' => true))) as $num) {
+     $data['plus_additional'] = (int)$num['additional'];
+}
 
 foreach ($dyn->find($itemXPath . '/div[2]/table/tr/td[@class="lotko-table"]', array('num' => array('xpath' => 'div', 'required' => true))) as $num) {
-    $data['lotko'] .= $num['num'];
+    $data['lotko'] .= (int)$num['num'];
 }
 
 
