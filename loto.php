@@ -2,9 +2,7 @@
 
 require 'DynFetcher.class.php';
 
-$itemXPath = '/html/body/table/tr[3]/td/center/table/tr[2]/td/div/table/tr/td[2]/div/div[div/span/img[@alt="Loto"]]';
-
-$dyn = new DynFetcher('http://www.loterija.si/');
+$dyn = new DynFetcher('http://www.loterija.si/LOTERIJA,,igre_z_zrebanji,loto,loto_rezultati');
 $data = array('round'     => 0,
               'date'      => '',
               'numbers'   => array(),
@@ -13,31 +11,33 @@ $data = array('round'     => 0,
               'plus_additional' => 0,
               'lotko'     => '');
 
-foreach ($dyn->find($itemXPath . '/div[@class="game-header"]', array('round' => array('xpath' => 'span', 'required' => true))) as $num) {
-    preg_match('/.* (\d*)\..* - (.*)$/', $num['round'], $parts);
+foreach ($dyn->find('//span[@class="game-info"]', array('round' => array('xpath' => '.', 'required' => true))) as $num) {
+    preg_match('/(\d*)\..*, (.*)$/', $num['round'], $parts);
     $data['round'] = (int)$parts[1];
     $data['date']  = $parts[2];
 }
 
 
-foreach ($dyn->find($itemXPath . '/div[2]/table[1]/tr/td[@class="loto-table"]', array('num' => array('xpath' => 'div', 'required' => true))) as $num) {
+foreach ($dyn->find('//div[@id="REZLOTO"]/table[1]//table[@class="tabela-mala"]/tr/td[@class="rdeca"]', array('num' => array('xpath' => '.', 'required' => true))) as $num) {
     $data['numbers'][] = (int)$num['num'];
 }
 
-foreach ($dyn->find($itemXPath . '/div[2]/table[1]/tr/td[@class="loto-table-dodatna"]', array('additional' => array('xpath' => 'div', 'required' => true))) as $num) {
+foreach ($dyn->find('//div[@id="REZLOTO"]/table[1]//table[@class="tabela-mala"]/tr/td[@class="zelena"]', array('additional' => array('xpath' => '.', 'required' => true))) as $num) {
      $data['additional'] = (int)$num['additional'];
 }
 
 
-foreach ($dyn->find($itemXPath . '/div[2]/table[3]/tr/td[@class="loto-table"]', array('num' => array('xpath' => 'div', 'required' => true))) as $num) {
+
+foreach ($dyn->find('//div[@id="REZLOTO"]/table[3]//table[@class="tabela-mala"]/tr/td[@class="zelena"]', array('num' => array('xpath' => '.', 'required' => true))) as $num) {
     $data['plus_numbers'][] = (int)$num['num'];
 }
 
-foreach ($dyn->find($itemXPath . '/div[2]/table[3]/tr/td[@class="loto-table-dodatna"]', array('additional' => array('xpath' => 'div', 'required' => true))) as $num) {
+foreach ($dyn->find('//div[@id="REZLOTO"]/table[3]//table[@class="tabela-mala"]/tr/td[@class="rdeca"]', array('additional' => array('xpath' => '.', 'required' => true))) as $num) {
      $data['plus_additional'] = (int)$num['additional'];
 }
 
-foreach ($dyn->find($itemXPath . '/div[2]/table/tr/td[@class="lotko-table"]', array('num' => array('xpath' => 'div', 'required' => true))) as $num) {
+
+foreach ($dyn->find('//div[@id="REZLOTO"]/table[2]//table[@class="tabela-mala"]/tr/td', array('num' => array('xpath' => '.', 'required' => true))) as $num) {
     $data['lotko'] .= (int)$num['num'];
 }
 
