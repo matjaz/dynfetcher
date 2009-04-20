@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>24ur.com weather - dynamic content with YQL</title>
+        <script type="text/javascript">
+            function cb24ur_weather(data)
+            {
+                var c = document.getElementById("weather");
+                if (data.error) {
+                    c.innerHTML = data.error.description;
+                    return;
+                }
+                var r = data.query.results.div,
+                    html = "",
+                    i, len, d,
+                    date, temp, img;
+
+                for (i=0, len=r.length; i<len; i++) {
+                    d = r[i];
+                    if ("p" in d) {
+                        date = d.p.span.content;
+                        html += date;
+                    } else {
+                        temp = d.a.img.alt;
+                        img  = "http://24ur.com" + d.a.img.src;
+                        html += " (" + temp + ")<br>" +
+                                '<img src="' + img + '"><br><br>';
+                    }
+                }
+                c.innerHTML = html;
+            }
+        </script>
+	</head>
+	<body>
+	    <div id="weather"></div>
+        <script type="text/javascript" src="http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http%3A%2F%2F24ur.com%22%20and%20xpath%3D%22%2F%2Fdiv%5B%40id%3D'weather'%5D%2F%2Fdiv%5B%40class%3D'day'%20or%20%40class%3D'icon'%5D%22&amp;format=json&amp;callback=cb24ur_weather&amp;diagnostics=false" defer="defer"></script>
+	</body>
+</html>
