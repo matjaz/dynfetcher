@@ -9,18 +9,20 @@ $itemXPath = '//div[@id="weather"]/div[@class="content"]/div[@class="day"]';
 
 // Associative array, where key is name of data and value is associative array with the following keys:
 // -xpath (required): XPath expression of data, relative from item
-// -required: true or false
+// -name:     if item name equals *, name can be dynamically specified with this XPath expression
+// -required: if item data is required and xpath returns empty set, item is skipped
 // -process:  PHP code, for additional processing of data
 //            data is passed as $data variable by reference
-//            if code returns false data is skipped
+//            if code returns false item is skipped
 $itemData = array(
-    'day'      => array('xpath' => '.',
+    '*'        => array('xpath'    => '.',
+                        'name'     => '@class',
                         'required' => true,
                         'process'  => '$data = trim($data);'),
-    'date'     => array('xpath' => 'span'),
-    'tempText' => array('xpath' => 'following-sibling::div[@class="icon"]/a/img/@alt',
+    'date'     => array('xpath'    => 'span'),
+    'tempText' => array('xpath'    => 'following-sibling::div[@class="icon"]/a/img/@alt',
                         'required' => true),
-    'img'      => array('xpath' => 'following-sibling::div[@class="icon"]/a/img/@src',
+    'img'      => array('xpath'    => 'following-sibling::div[@class="icon"]/a/img/@src',
                         'process'  => '$data = "http://24ur.com" . $data;'),
 );
 

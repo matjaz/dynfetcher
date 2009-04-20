@@ -64,6 +64,9 @@ class DynFetcher
             if (!isset($data['xpath'])) {
                 throw new Exception("$key does not have XPath specified!");
             }
+            if ($key === '*' && !isset($data['name'])) {
+                throw new Exception("XPath \"{$data['xpath']}\" must sprecify name!");
+            }
             if (isset($data['process'])) {
                 $data['process'] = create_function('&$data', $data['process']);
             }
@@ -80,6 +83,13 @@ class DynFetcher
         foreach ($results as &$result) {
             $item = array();
             foreach ($itemData as $key => &$keyData) {
+                if ($key === '*') {
+                    $keyResult = $result->xpath($keyData['name']);
+                    if (@$keyData['required'] === true && !isset($keyResult[0])) {
+                        continue 2;
+                    }
+                    $key = (string)$keyResult[0];
+                }
                 $itemResult = $result->xpath($keyData['xpath']);
                 if (!is_array($itemResult) || !isset($itemResult[0])) {
                     if (@$keyData['required'] === true) {
