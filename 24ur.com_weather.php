@@ -5,7 +5,7 @@ require 'DynFetcher.class.php';
 $URL = 'http://24ur.com/';
 
 // XPath expression of items
-$itemXPath = '//div[@id="weather"]/div[@class="content"]/div[@class="day"]';
+$itemXPath = '//div[@id="weather"]/div[@class="content"]/div[@class="day"]/div[1]';
 
 // Associative array, where key is name of data and value is associative array with the following keys:
 // -xpath (required): XPath expression of data, relative from item

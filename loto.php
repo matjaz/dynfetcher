@@ -2,7 +2,7 @@
 
 require 'DynFetcher.class.php';
 
-$dyn = new DynFetcher('http://www.loterija.si/LOTERIJA,,igre_z_zrebanji,loto,loto_rezultati');
+$dyn = new DynFetcher('http://www.loterija.si/LOTERIJA,,igre_z_zrebanji,loto,loto_rezultati.htm');
 $data = array('round'     => 0,
               'date'      => '',
               'numbers'   => array(),

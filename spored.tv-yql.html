@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>spored.tv - dynamic content with YQL</title>
+        <script type="text/javascript">
+            function cbspored_tv(data)
+            {
+			console.log(data)
+                var c = document.getElementById("spored");
+                if (data.error) {
+                    c.innerHTML = data.error.description;
+                    return;
+                }
+                 var r = data.query.results.div,
+                     html = "",
+                     i, len, d, p,
+                     TV, img, TVlink,
+                     hour;
+                for (i=0, len=r.length; i<len; i++) {
+                    d = r[i];
+                    if ("a" in d) {
+                        TV = d.a.title;
+                        TVlink = d.a.href;
+                        img = d.a.img.src;
+                        if (i>0) {
+                            html += "<br>";
+                        }
+                        html += '<a href="' + TVlink + '"><img src="' + img + '"></a><br>';
+                    } else {
+                        var divs = d.div.div;
+                        hour = divs[0].p;
+                        if (divs[1].a) {
+                            title = divs[1].a.content;
+							p     = divs[1].div.p;
+                            desc  = p.content ? p.content : p;
+                        } else {
+                            title =  divs[1].p;
+                            desc = "";
+                        }
+                        html += hour + " " + title + " " + desc + "<br>";
+                    }
+                }
+                c.innerHTML = html;
+            }
+        </script>
+	</head>
+	<body>
+	    <div id="spored"></div>
+		<!-- select a,div from html where url="http://www.spored.tv/" and xpath="//div[@id='Content']/div" -->
+	    <script type="text/javascript" src="http://query.yahooapis.com/v1/public/yql?q=select%20a%2Cdiv%20from%20html%20where%20url%3D%22http%3A%2F%2Fwww.spored.tv%2F%22%20and%20xpath%3D%22%2F%2Fdiv%5B%40id%3D'Content'%5D%2Fdiv%22&amp;format=json&amp;callback=cbspored_tv&amp;diagnostics=false"></script>
+	</body>
+</html>
