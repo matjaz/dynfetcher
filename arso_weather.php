@@ -41,7 +41,7 @@ foreach($dyn->find($baseXPath . '/tr[2]/td[not(@class="prazen")]', array(
 if (isset($_GET['format']) && $_GET['format'] === 'json') {
     echo json_encode($weather);
 } else {
-    var_dump($weather);
+    print_r($weather);
 }
 
 ?>

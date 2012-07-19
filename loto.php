@@ -48,7 +48,7 @@ header('Content-type: text/plain');
 if (isset($_GET['format']) && $_GET['format'] === 'json') {
     echo json_encode($data);
 } else {
-    var_dump($data);
+    print_r($data);
 }
 
 ?>

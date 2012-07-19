@@ -60,7 +60,7 @@ $dyn = new DynFetcher($URL);
 if (isset($_GET['format']) && $_GET['format'] === 'json') {
     echo json_encode($dyn->find($itemXPath, $itemData, $itemProcessFunction));
 } else {
-    var_dump($dyn->find($itemXPath, $itemData, $itemProcessFunction));
+    print_r($dyn->find($itemXPath, $itemData, $itemProcessFunction));
 }
 
 ?>
