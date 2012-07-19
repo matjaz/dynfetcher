@@ -3,7 +3,7 @@
 /**
 * Use this class under LGPL license
 * @author   Matjaz Lipus <me@matjaz.info>
-* @link     http://code.google.com/p/dynfetcher
+* @link     https://github.com/matjaz/dynfetcher
 * @package  dynfetcher
 * @version  1.0
 */ 
