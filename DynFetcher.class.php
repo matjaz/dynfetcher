@@ -43,7 +43,7 @@ class DynFetcher
      * 
      * @param string $itemXPath Items XPath expression
      * @param array $itemData Array of key-values pairs of data we want to fetch
-     * @param string $itemProcessFunction PHP code for additional processing of each item (passed argument is $item)
+     * @param mixed $itemProcessFunction String or callable. Function for additional processing of each item (passed argument is $item). If false is returned item is skiped.
      * @return array Array of matched items
      */
     function find($itemXPath, $itemData, $itemProcessFunction = null)
@@ -74,9 +74,6 @@ class DynFetcher
 
         if (is_string($itemProcessFunction)) {
             $itemProcessFunction = create_function('&$item', $itemProcessFunction);
-            $processItem = true;
-        } else {
-            $processItem = false;
         }
 
         $items = array();
@@ -108,7 +105,7 @@ class DynFetcher
                     }
                 }
             }
-            if (!$processItem || $itemProcessFunction($item) !== false) {
+            if ($itemProcessFunction && $itemProcessFunction($item) !== false) {
                 $items[] = $item;
             }
         }

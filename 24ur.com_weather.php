@@ -31,14 +31,15 @@ $itemData = array(
 // PHP code, for additionl processing of item after all items have been processed
 // item is passes as $item variable by reference
 // if code returns false item is skipped
-$itemProcessFunction = '
+// can be either string or callable (PHP 5.3+)
+$itemProcessFunction = function(&$item) {
     $tempText  = explode(" | ", $item["tempText"]);
     $item["min"] = (string)((int)$tempText[0]);
     $item["max"] = (string)((int)$tempText[1]);
     unset($item["tempText"]);
 
     // return false; // skip item
-';
+};
 
 
 
