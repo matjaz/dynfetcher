@@ -10,9 +10,9 @@
 class DynFetcher
 {
     protected $url;
-
+    
     private $simpleXML = null;
-
+    
     /**
      *
      * @param string $URL URL of page
@@ -52,9 +52,6 @@ class DynFetcher
             throw new Exception('$itemData must be array!');
         }
         $results = $this->fetch()->xpath($itemXPath);
-
-        //print_r($results);
-       // var_dump($results);
 
         if (!is_array($results)) {
             throw new Exception('XPath did not return any results');
@@ -96,9 +93,9 @@ class DynFetcher
                         continue 2;
                     }
                 } else {
-                    if(@$keyData['skip_to_string'] !== true){
+                    if (@$keyData['raw'] !== true) {
                         $itemResult = (string)$itemResult[0];
-                    };
+                    }
 
                     if (isset($keyData['process'])) {
                         if ($keyData['process']($itemResult) !== false) {
