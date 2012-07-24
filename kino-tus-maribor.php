@@ -1,5 +1,7 @@
 <?php
 
+// requires PHP 5.3
+
 require 'XMLDynFetcher.class.php';
 
 $dyn = new XMLDynFetcher('http://www.planet-tus.si/xml/spored.xml');
@@ -16,27 +18,29 @@ $itemMapping = array(
 	'stevilo_predstav' => array(
 		'xpath'   => 'predstava/ura',
 		'raw'     => true,
-		'process' => '$data = count($data);',
+		'process' => function(&$data) {
+			$data = count($data);
+		}
 	),
 	'ure' => array(
 		'xpath'   => 'predstava/ura',
 		'raw'     => true,
-		'process' => '
+		'process' => function(&$data) {
 			$data = array_map(function($ura){
 				return array(
-					"ura" => (string)$ura,
-					"cena" => (string)$ura["cena_eur"]
+					'ura'  => (string)$ura,
+					'cena' => (string)$ura['cena_eur']
 				);
 			}, $data);
-		',
+		}
 	),
 	'zvrst' => array(
 		'xpath'   => 'zvrst',
-		'process' => '
+		'process' => function(&$data) {
 			$data = array_map(function($i){
 				return trim($i);
 			}, explode(",", $data));
-		'
+		}
 	)
 );
 
