@@ -14,5 +14,6 @@ https://github.com/matjaz/dynfetcher/blob/master/24ur.com_weather.php)  fetching
 
 For latest updates visit [project's repository](https://github.com/matjaz/dynfetcher/).
 
+For simple working demo of DynFetcher visit [dynfetcher.herokuapp.com](http://dynfetcher.herokuapp.com)
 
 Maybe you might find interesting [Yahoo! Query Language](http://developer.yahoo.com/yql/).
