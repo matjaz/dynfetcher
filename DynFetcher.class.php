@@ -68,7 +68,12 @@ class DynFetcher
                 throw new Exception("XPath \"{$data['xpath']}\" must sprecify name!");
             }
             if (isset($data['process'])) {
-                $data['process'] = create_function('&$data', $data['process']);
+                if (is_string($data['process'])) {
+                    $data['process'] = create_function('&$data', $data['process']);
+                }
+                if (!is_callable($data['process'])) {
+                    throw new Exception("$key process parameter is not valid callable.");
+                }
             }
         }
 
