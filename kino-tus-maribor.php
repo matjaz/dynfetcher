@@ -1,15 +1,15 @@
-<?
+<?php
 
-date_default_timezone_set('Europe/Ljubljana');
+require 'DynFetcher.class.php';
 
-require_once 'DynFetcher.class.php';
-
-class CustomDynFetcher extends DynFetcher{
-	function fetch(){
-		if(! $xml_raw = @file_get_contents($this->url) )
-			throw new Exception(sprintf("Missing content at url: %s ",$this->url));
-		
-		return $this->simpleXML = simplexml_load_string($xml_raw,
+class CustomDynFetcher extends DynFetcher
+{
+	public function fetch()
+	{
+		if (!$xml_raw = @file_get_contents($this->url)) {
+			throw new Exception("Missing content at url: {$this->url}");
+		}
+		return simplexml_load_string($xml_raw,
 			'SimpleXMLElement', LIBXML_NOCDATA);
 	}
 }
@@ -17,7 +17,7 @@ class CustomDynFetcher extends DynFetcher{
 $dyn = new CustomDynFetcher('http://www.planet-tus.si/xml/spored.xml');
 
 $itemXPath = sprintf('//dan[@datum="%s"]/spored[@kino="%s"]/film',
-	date("Y-m-d", strtotime("now")),"Planet Tuš Maribor");
+				date('Y-m-d'), 'Planet Tuš Maribor');
 
 $itemMapping = array(
 	'id'		=> array('xpath' => '@id'),
@@ -25,28 +25,35 @@ $itemMapping = array(
 	'naslov_en'	=> array('xpath' => 'naslov_en'),
 	'cover'		=> array('xpath' => 'cover'),
 	'link'		=> array('xpath' => 'link'),
-	'stevilo_predstav' => array('xpath' => 'predstava/ura',
+	'stevilo_predstav' => array(
+		'xpath'   => 'predstava/ura',
+		'raw'     => true,
 		'process' => '$data = count($data);',
-		'skip_to_string' => true,
 	),
-	'ure' => array('xpath' => 'predstava/ura',
+	'ure' => array(
+		'xpath'   => 'predstava/ura',
+		'raw'     => true,
 		'process' => '
-			$out = array();
-			foreach($data as $ura) $out[]=array(
-				"ura" => (string)$ura, "cena" => (string)$ura["cena_eur"]);
-			$data = $out;
+			$data = array_map(function($ura){
+				return array(
+					"ura" => (string)$ura,
+					"cena" => (string)$ura["cena_eur"]
+				);
+			}, $data);
 		',
-		'skip_to_string' => true,
 	),
-	'zvrst'		=> array('xpath' => 'zvrst','process' => '
-		$data = array_map(function($i){
-			return trim($i);
-		},explode(",",$data));
-	')
+	'zvrst' => array(
+		'xpath'   => 'zvrst',
+		'process' => '
+			$data = array_map(function($i){
+				return trim($i);
+			}, explode(",", $data));
+		'
+	)
 );
 
-$filmi = $dyn->find($itemXPath,$itemMapping,'');
+$filmi = $dyn->find($itemXPath, $itemMapping);
 
-if(!$_SERVER["HTTP_HOST"]){ // Console...
-	print_r($filmi );
-};
+if (!isset($_SERVER['HTTP_HOST'])) { // Console...
+	print_r($filmi);
+}

@@ -1,4 +1,4 @@
-<? 
+<?php 
 
 /*	
 	This is just a simple template that includes "kino-tus-maribor.php" and displays content.
@@ -33,9 +33,9 @@ require "kino-tus-maribor.php";
 
 		<div class="wrap">
 		<div class="header">
-			<h1><?= date("Y-m-d",strtotime("now")) ?> @ <a href="http://www.planet-tus.si/">Planet Tuš Maribor</a> via <a href="https://github.com/matjaz/dynfetcher">DynFetcher</a> </h1>
+			<h1><?php echo date('Y-m-d') ?> @ <a href="http://www.planet-tus.si/">Planet Tuš Maribor</a> via <a href="https://github.com/matjaz/dynfetcher">DynFetcher</a> </h1>
 			
-			<?
+			<?php
 			$zvrsti = array();
 			foreach($filmi as $film)
 				foreach($film['zvrst'] as $zvrst)
@@ -44,25 +44,25 @@ require "kino-tus-maribor.php";
 
 			<ul class="zvrsti">
 				<li><a href="#all" data-filter="*">All</a></li>
-				<? foreach ($zvrsti as $zvrst): ?>
-				<li><a href="#<?= $zvrst ?>" data-filter=".<?= $zvrst ?>"><?= ucfirst($zvrst); ?></a></li>
-			<? endforeach; ?></ul>
+				<?php foreach ($zvrsti as $zvrst): ?>
+				<li><a href="#<?php echo $zvrst ?>" data-filter=".<?php echo $zvrst ?>"><?php echo ucfirst($zvrst); ?></a></li>
+			<?php endforeach; ?></ul>
 
 		</div>
 
 		<div class="filmi-wrap">
-		<div class="filmi"><? foreach($filmi as $film): ?>
-			<div class="film <?= implode(' ',$film['zvrst']); ?>">
-				<img src="<?= $film['cover'] ?>"/>
+		<div class="filmi"><?php foreach($filmi as $film): ?>
+			<div class="film <?php echo implode(' ',$film['zvrst']); ?>">
+				<img src="<?php echo $film['cover'] ?>"/>
 				<div class="details">
-					<h2><?= $film["naslov"] ?></h2>
-					<? foreach($film["ure"] as $ura): ?>
-						<strong><?= $ura["ura"]; ?></strong>
-						(<?= $ura["cena"] ?> &euro;)
-					<? endforeach; ?>
+					<h2><?php echo $film["naslov"] ?></h2>
+					<?php foreach($film["ure"] as $ura): ?>
+						<strong><?php echo $ura["ura"]; ?></strong>
+						(<?php echo $ura["cena"] ?> &euro;)
+					<?php endforeach; ?>
 				</div>
 			</div>
-		<? endforeach; ?></div></div>
+		<?php endforeach; ?></div></div>
 
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
