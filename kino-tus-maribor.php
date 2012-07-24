@@ -16,12 +16,37 @@ class CustomDynFetcher extends DynFetcher{
 
 $dyn = new CustomDynFetcher('http://www.planet-tus.si/xml/spored.xml');
 
-$itemXPath = sprintf('//dan[@datum="%s"]/spored[@kino="%s"]/film',date("Y-m-d", strtotime("now")),"Planet Tuš Maribor");
+$itemXPath = sprintf('//dan[@datum="%s"]/spored[@kino="%s"]/film',
+	date("Y-m-d", strtotime("now")),"Planet Tuš Maribor");
+
 $itemMapping = array(
+	'id'		=> array('xpath' => '@id'),
 	'naslov'	=> array('xpath' => 'naslov_si'),
+	'naslov_en'	=> array('xpath' => 'naslov_en'),
 	'cover'		=> array('xpath' => 'cover'),
-	'link'		=> array('xpath' => 'link')
+	'link'		=> array('xpath' => 'link'),
+	'stevilo_predstav' => array('xpath' => 'predstava/ura',
+		'process' => '$data = count($data);',
+		'skip_to_string' => true,
+	),
+	'ure' => array('xpath' => 'predstava/ura',
+		'process' => '
+			$out = array();
+			foreach($data as $ura) $out[]=array(
+				"ura" => (string)$ura, "cena" => (string)$ura["cena_eur"]);
+			$data = $out;
+		',
+		'skip_to_string' => true,
+	),
+	'zvrst'		=> array('xpath' => 'zvrst','process' => '
+		$data = array_map(function($i){
+			return trim($i);
+		},explode(",",$data));
+	')
 );
 
+$filmi = $dyn->find($itemXPath,$itemMapping,'');
 
-print_r($dyn->find($itemXPath,$itemMapping,''));
+if(!$_SERVER["HTTP_HOST"]){ // Console...
+	print_r($filmi );
+};

@@ -96,7 +96,10 @@ class DynFetcher
                         continue 2;
                     }
                 } else {
-                    $itemResult = (string)$itemResult[0];
+                    if(@$keyData['skip_to_string'] !== true){
+                        $itemResult = (string)$itemResult[0];
+                    };
+
                     if (isset($keyData['process'])) {
                         if ($keyData['process']($itemResult) !== false) {
                             $item[$key] = $itemResult;
