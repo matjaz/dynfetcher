@@ -53,6 +53,9 @@ class DynFetcher
         }
         $results = $this->fetch()->xpath($itemXPath);
 
+        //print_r($results);
+       // var_dump($results);
+
         if (!is_array($results)) {
             throw new Exception('XPath did not return any results');
         }
