@@ -9,15 +9,15 @@
 */ 
 class DynFetcher
 {
-
     protected $url;
+
     private $simpleXML = null;
 
     /**
      *
      * @param string $URL URL of page
      */
-    function __construct($url)
+    public function __construct($url)
     {
         $this->url = $url;
     }
@@ -27,7 +27,7 @@ class DynFetcher
      * It is called automatticaly inside of {@link #find} method.
      * @return SimpleXMLElement SimpleXML object representation of webpage.
      */
-    function fetch()
+    protected function fetch()
     {
         if (is_null($this->simpleXML)) {
             $data = @file_get_contents($this->url);
@@ -46,7 +46,7 @@ class DynFetcher
      * @param mixed $itemProcessFunction String or callable. Function for additional processing of each item (passed argument is $item). If false is returned item is skiped.
      * @return array Array of matched items
      */
-    function find($itemXPath, $itemData, $itemProcessFunction = null)
+    public function find($itemXPath, $itemData, $itemProcessFunction = null)
     {
         if (!is_array($itemData)) {
             throw new Exception('$itemData must be array!');
@@ -112,6 +112,3 @@ class DynFetcher
         return $items;
     }
 }
-
-
-?>
