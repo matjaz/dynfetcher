@@ -1,20 +1,8 @@
 <?php
 
-require 'DynFetcher.class.php';
+require 'XMLDynFetcher.class.php';
 
-class CustomDynFetcher extends DynFetcher
-{
-	public function fetch()
-	{
-		if (!$xml_raw = @file_get_contents($this->url)) {
-			throw new Exception("Missing content at url: {$this->url}");
-		}
-		return simplexml_load_string($xml_raw,
-			'SimpleXMLElement', LIBXML_NOCDATA);
-	}
-}
-
-$dyn = new CustomDynFetcher('http://www.planet-tus.si/xml/spored.xml');
+$dyn = new XMLDynFetcher('http://www.planet-tus.si/xml/spored.xml');
 
 $itemXPath = sprintf('//dan[@datum="%s"]/spored[@kino="%s"]/film',
 				date('Y-m-d'), 'Planet Tuš Maribor');
