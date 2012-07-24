@@ -111,7 +111,7 @@ class DynFetcher
                     }
                 }
             }
-            if ($itemProcessFunction && $itemProcessFunction($item) !== false) {
+            if (!$itemProcessFunction || $itemProcessFunction($item) !== false) {
                 $items[] = $item;
             }
         }
