@@ -5,10 +5,18 @@
 * @author   Matjaz Lipus <me@matjaz.info>
 * @link     https://github.com/matjaz/dynfetcher
 * @package  dynfetcher
-* @version  1.0
+* @version  1.1
 */ 
 class DynFetcher
 {
+    const ERROR_RETRIEVE_DATA        = 1;
+    const ERROR_NO_RESULT            = 2;
+    const ERROR_ITEM_MUST_BE_ARRAY   = 3;
+    const ERROR_NO_XPATH             = 4;
+    const ERROR_WILDCARD_NO_NAME     = 5;
+    const ERROR_INVALID_PROCESS      = 6;
+    const ERROR_INVALID_ITEM_PROCESS = 7;
+
     protected $url;
     
     private $simpleXML = null;
@@ -32,7 +40,7 @@ class DynFetcher
         if (is_null($this->simpleXML)) {
             $data = @file_get_contents($this->url);
             if (!is_string($data)) {
-                throw new Exception('Error retrieving data');
+                throw new UnexpectedValueException('Error retrieving data.', self::ERROR_RETRIEVE_DATA);
             }
             $this->simpleXML = simplexml_import_dom(@DomDocument::loadHTML($data));
         }
@@ -48,34 +56,37 @@ class DynFetcher
      */
     public function find($itemXPath, array $itemData, $itemProcessFunction = null)
     {
-        $results = $this->fetch()->xpath($itemXPath);
+        $results = @$this->fetch()->xpath($itemXPath);
 
         if (!is_array($results)) {
-            throw new Exception('XPath did not return any results');
+            throw new UnexpectedValueException('XPath did not return any results.', self::ERROR_NO_RESULT);
         }
 
         foreach ($itemData as $key => &$data) {
             if (!is_array($data)) {
-                throw new Exception("$key must have array value!");
+                throw new InvalidArgumentException("$key must have array value.", self::ERROR_ITEM_MUST_BE_ARRAY);
             }
             if (!isset($data['xpath'])) {
-                throw new Exception("$key does not have XPath specified!");
+                throw new InvalidArgumentException("$key does not have XPath specified.", self::ERROR_NO_XPATH);
             }
             if ($key === '*' && !isset($data['name'])) {
-                throw new Exception("XPath \"{$data['xpath']}\" must sprecify name!");
+                throw new InvalidArgumentException("XPath \"{$data['xpath']}\" must sprecify name.", self::ERROR_WILDCARD_NO_NAME);
             }
             if (isset($data['process'])) {
                 if (is_string($data['process']) && !is_callable($data['process'])) {
-                    $data['process'] = create_function('&$data', $data['process']);
+                    $data['process'] = @create_function('&$data', $data['process']);
                 }
                 if (!is_callable($data['process'])) {
-                    throw new Exception("$key process parameter is not valid callable.");
+                    throw new InvalidArgumentException("$key process parameter is not valid callable.", self::ERROR_INVALID_PROCESS);
                 }
             }
         }
 
         if (is_string($itemProcessFunction)) {
-            $itemProcessFunction = create_function('&$item', $itemProcessFunction);
+            $itemProcessFunction = @create_function('&$item', $itemProcessFunction);
+            if (!is_callable($itemProcessFunction)) {
+                throw new InvalidArgumentException('itemProcessFunction parameter is not valid callable.', self::ERROR_INVALID_ITEM_PROCESS);
+            }
         }
 
         $items = array();
