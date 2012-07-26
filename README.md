@@ -1,6 +1,8 @@
 DynFetcher
 ============
 
+[![Build Status](https://secure.travis-ci.org/matjaz/dynfetcher.png?branch=master)](http://travis-ci.org/matjaz/dynfetcher)
+
 Fetch weather or TV program _or any other_ data from (X)HTML files in just a few lines using XPath.
 
 __Requires__ PHP 5 and following extensions:
