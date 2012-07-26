@@ -15,13 +15,6 @@ $itemMapping = array(
     'naslov_en' => array('xpath' => 'naslov_en'),
     'cover'     => array('xpath' => 'cover'),
     'link'      => array('xpath' => 'link'),
-    'stevilo_predstav' => array(
-        'xpath'   => 'predstava/ura',
-        'raw'     => true,
-        'process' => function(&$data) {
-            $data = count($data);
-        }
-    ),
     'ure' => array(
         'xpath'   => 'predstava/ura',
         'raw'     => true,
@@ -44,7 +37,11 @@ $itemMapping = array(
     )
 );
 
-$filmi = $dyn->find($itemXPath, $itemMapping);
+$itemProcessFn = function(&$item) {
+    $item['stevilo_predstav'] = count($item['ure']);
+};
+
+$filmi = $dyn->find($itemXPath, $itemMapping, $itemProcessFn);
 
 if (!isset($_SERVER['HTTP_HOST'])) { // Console...
     print_r($filmi);
