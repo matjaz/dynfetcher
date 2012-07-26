@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/DynFetcher.class.php';
+require_once dirname(__FILE__) . '/DynFetcher.class.php';
 
 class XMLDynFetcher extends DynFetcher
 {

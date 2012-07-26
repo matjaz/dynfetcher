@@ -1,12 +1,12 @@
 <?php
 
-require __DIR__ . '/../DynFetcher.class.php';
+require dirname(__FILE__) . '/../DynFetcher.class.php';
 
-class DynFetcherTest extends \PHPUnit_Framework_TestCase
+class DynFetcherTest extends PHPUnit_Framework_TestCase
 {
     private function getDyn()
     {
-        return new DynFetcher(__DIR__ . '/data/weather.html');
+        return new DynFetcher(dirname(__FILE__) . '/data/weather.html');
     }
 
     // Basic class set up
@@ -18,7 +18,7 @@ class DynFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function test404Resource()
     {
-        $dyn = new DynFetcher(__DIR__ . '/404');
+        $dyn = new DynFetcher(dirname(__FILE__) . '/404');
         $dyn->find('foo', array());
     }
 

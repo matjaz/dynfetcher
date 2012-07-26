@@ -1,12 +1,12 @@
 <?php
 
-require __DIR__ . '/../XMLDynFetcher.class.php';
+require dirname(__FILE__) . '/../XMLDynFetcher.class.php';
 
-class XMLDynFetcherTest extends \PHPUnit_Framework_TestCase
+class XMLDynFetcherTest extends PHPUnit_Framework_TestCase
 {
     public function testBasicsXMLRead()
     {
-        $dyn = new XMLDynFetcher(__DIR__ . '/data/data.xml');
+        $dyn = new XMLDynFetcher(dirname(__FILE__) . '/data/data.xml');
         $res = $dyn->find('//contact-info', array(
             'name'    => array('xpath' => 'name'),
             'company' => array('xpath' => 'company'),
@@ -27,7 +27,7 @@ class XMLDynFetcherTest extends \PHPUnit_Framework_TestCase
      */
     public function test404()
     {
-        $dyn = new XMLDynFetcher(__DIR__ . '/404');
+        $dyn = new XMLDynFetcher(dirname(__FILE__) . '/404');
         $res = $dyn->find('foo', array());
     }
 }
