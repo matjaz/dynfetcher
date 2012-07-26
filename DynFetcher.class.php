@@ -84,10 +84,11 @@ class DynFetcher
             foreach ($itemData as $key => &$keyData) {
                 if ($key === '*') {
                     $keyResult = $result->xpath($keyData['name']);
-                    if (@$keyData['required'] === true && !isset($keyResult[0])) {
+                    if (is_array($keyResult) && isset($keyResult[0])) {
+                        $key = (string)$keyResult[0];
+                    } else if (@$keyData['required'] === true) {
                         continue 2;
                     }
-                    $key = (string)$keyResult[0];
                 }
                 $itemResult = $result->xpath($keyData['xpath']);
                 if (!is_array($itemResult) || !isset($itemResult[0])) {
