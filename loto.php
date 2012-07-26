@@ -2,19 +2,22 @@
 
 require 'DynFetcher.class.php';
 
-$dyn = new DynFetcher('http://www.loterija.si/LOTERIJA,,igre_z_zrebanji,loto,loto_rezultati.htm');
-$data = array('round'     => 0,
-              'date'      => '',
-              'numbers'   => array(),
-              'additional' => 0,
-              'plus_numbers'   => array(),
-              'plus_additional' => 0,
-              'lotko'     => '');
+$dyn = new DynFetcher('http://loterija.si/LOTERIJA,,igre,igre_z_zrebanji,loto,loto_rezultati.htm');
+$data = array(
+    'round'           => 0,
+    'date'            => '',
+    'numbers'         => array(),
+    'additional'      => 0,
+    'plus_numbers'    => array(),
+    'plus_additional' => 0,
+    'lotko'           => ''
+);
 
-foreach ($dyn->find('//span[@class="game-info"]', array('round' => array('xpath' => '.', 'required' => true))) as $num) {
-    preg_match('/(\d*)\..*, (.*)$/', $num['round'], $parts);
-    $data['round'] = (int)$parts[1];
-    $data['date']  = $parts[2];
+foreach ($dyn->find('//span[@class="game-info"][1]', array('round' => array('xpath' => '.', 'required' => true))) as $num) {
+    if (preg_match('/(\d*)\..*, (.*)$/', $num['round'], $parts)) {
+        $data['round'] = (int)$parts[1];
+        $data['date']  = $parts[2];
+    }
 }
 
 
@@ -23,7 +26,7 @@ foreach ($dyn->find('//div[@id="REZLOTO"]/table[1]//table[@class="tabela-mala"]/
 }
 
 foreach ($dyn->find('//div[@id="REZLOTO"]/table[1]//table[@class="tabela-mala"]/tr/td[@class="zelena"]', array('additional' => array('xpath' => '.', 'required' => true))) as $num) {
-     $data['additional'] = (int)$num['additional'];
+    $data['additional'] = (int)$num['additional'];
 }
 
 
@@ -50,5 +53,3 @@ if (isset($_GET['format']) && $_GET['format'] === 'json') {
 } else {
     print_r($data);
 }
-
-?>
