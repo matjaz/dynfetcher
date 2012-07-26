@@ -4,7 +4,7 @@ require_once __DIR__ . '/DynFetcher.class.php';
 
 class XMLDynFetcher extends DynFetcher
 {
-    public function fetch()
+    protected function fetch()
     {
         if (!$xml = @file_get_contents($this->url)) {
             throw new Exception("Missing content at url: {$this->url}");
