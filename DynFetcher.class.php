@@ -46,11 +46,8 @@ class DynFetcher
      * @param mixed $itemProcessFunction String or callable. Function for additional processing of each item (passed argument is $item). If false is returned item is skiped.
      * @return array Array of matched items
      */
-    public function find($itemXPath, $itemData, $itemProcessFunction = null)
+    public function find($itemXPath, array $itemData, $itemProcessFunction = null)
     {
-        if (!is_array($itemData)) {
-            throw new Exception('$itemData must be array!');
-        }
         $results = $this->fetch()->xpath($itemXPath);
 
         if (!is_array($results)) {
